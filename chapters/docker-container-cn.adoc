@@ -241,9 +241,9 @@ Port exposure and mapping are the keys to successful work with Docker. 端口暴
 See more about networking on the Docker website link:https://docs.docker.com/articles/networking/[Advanced Networking] 关于更多Docker的网络知识，参考：https://docs.docker.com/articles/networking/[Advanced Networking]
 ===============================
 
-Now we're ready to test http://dockerhost:8080 again. This works with the exposed port, as expected.现在
+Now we're ready to test http://dockerhost:8080 again. This works with the exposed port, as expected.现在我们在一次准备测试 http://dockerhost:8080。正如我们所期望的，在了暴露的端口上，这工作了。
 
-Lets stop the previously running container as:
+Lets stop the previously running container as: 让我们停止运行前面正在运行的容器：
 
 [source, text]
 ----
@@ -254,13 +254,13 @@ docker stop mywildfly-mapped-ports
 image::images/plain-wildfly1.png[]
 
 [[Enabling_WildFly_Administration]]
-### Enabling WildFly Administration
+### Enabling WildFly Administration 启用WildFly管理
 
-Default WildFly image exposes only port 8080 and thus is not available for administration using either the CLI or Admin Console. Lets expose the ports in different ways.
+Default WildFly image exposes only port 8080 and thus is not available for administration using either the CLI or Admin Console. Lets expose the ports in different ways.默认WildFly镜像仅暴露8080端口，因此不能使用CLI和Admin Console进行管理。让我们使用不同的方法来暴露端口。
 
-#### Default Port Mapping
+#### Default Port Mapping 默认的端口映射
 
-The following command will override the default command in Docker file, start WildFly, and bind application and management port to all network interfaces.
+The following command will override the default command in Docker file, start WildFly, and bind application and management port to all network interfaces.下面的命令会覆盖Docker文件中默认命令，启动WildFly，绑定应用程序和管理程序的端口到所有的网络接口。
 
 [source, text]
 ----
@@ -271,7 +271,7 @@ docker run --name managed-wildfly -P -d jboss/wildfly /opt/jboss/wildfly/bin/sta
 docker run --name managed-wildfly -P -d classroom.example.com:5000/wildfly /opt/jboss/wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0 
 ----
 
-Accessing WildFly Administration Console require a user in administration realm. A pre-created image, with appropriate username/password credentials, is used to start WildFly as:
+Accessing WildFly Administration Console require a user in administration realm. A pre-created image, with appropriate username/password credentials, is used to start WildFly as: 访问WildFly Administration Console需要用户在管理域。一个预先创建的镜像，带有合适的username/password凭证，用来启动WildFly：
 
 [source, text]
 ----
@@ -282,9 +282,9 @@ docker run --name managed-wildfly-from-image -P -d rafabene/wildfly-admin
 docker run --name managed-wildfly-from-image -P -d classroom.example.com:5000/wildfly-management
 ----
 
-`-P` map any exposed ports inside the image to a random port on Docker host.
+`-P` map any exposed ports inside the image to a random port on Docker host. `-P` 映射镜像内任意暴露的端口到Docker主机上的随机的一个端口。
 
-Look at the exposed ports as:
+Look at the exposed ports as: 查看暴露的端口：
 
 [source, text]
 ----
@@ -294,11 +294,11 @@ CONTAINER ID        IMAGE                       COMMAND                CREATED  
 ee30433b5414        jboss/wildfly               "/opt/jboss/wildfly/   59 seconds ago      Up 59 seconds       0.0.0.0:32769->8080/tcp                            managed-wildfly
 ----
 
-Look for the host port that is mapped in the container, `32769` in this case. Access the admin console at http://dockerhost:32769.
+Look for the host port that is mapped in the container, `32769` in this case. Access the admin console at http://dockerhost:32769. 查找主机端口，被映射到容器内的 `32769` 在本例中。访问管理控制台 http://dockerhost:32769。
 
-NOTE: Exact port number may be different in your case.
+NOTE: Exact port number may be different in your case. 注意：在你的控制台上，端口号可能不同。
 
-The username/password credentials are:
+The username/password credentials are: username/password 凭证是：
 
 [[WildFly_Administration_Credentials]]
 [options="header"]
@@ -308,16 +308,16 @@ The username/password credentials are:
 | Password | docker#admin
 |====
 
-This shows the admin console as:
+This shows the admin console as: 这显示管理控制台：
 
 .Welcome WildFly
 image::images/wildfly-admin-console.png[]
 
-##### Additional Ways To Find Port Mapping
+##### Additional Ways To Find Port Mapping 查找端口映射的其它方法
 
-The exact mapped port can also be found as:
+The exact mapped port can also be found as: 精确的映射的端口可以通过下面的命令查到：
 
-. Using `docker port`:
+. Using `docker port`: 使用`docker port`：
 +
 [source, text]
 ----
@@ -332,7 +332,7 @@ to see the output as:
 0.0.0.0:32770->9990/tcp
 ----
 +
-. Using `docker inspect`:
+. Using `docker inspect`: 使用`docker inspect`：
 +
 [source, text]
 ----
@@ -340,9 +340,9 @@ docker inspect --format='{{(index (index .NetworkSettings.Ports "9990/tcp") 0).H
 ----
 
 [[Management_Fixed_Port_Mapping]]
-#### Fixed Port Mapping
+#### Fixed Port Mapping 固定端口映射
 
-This management image can also be started with a pre-defined port mapping as:
+This management image can also be started with a pre-defined port mapping as: 这个管理镜像可以使用预定义的端口映射启动：
 
 [source, text]
 ----
@@ -353,7 +353,7 @@ docker run -p 8080:8080 -p 9990:9990 -d rafabene/wildfly-admin
 docker run -p 8080:8080 -p 9990:9990 -d classroom.example.com:5000/wildfly-management 
 ----
 
-In this case, Docker port mapping will be shown as:
+In this case, Docker port mapping will be shown as: 在这种情况下，Docker端口映射显示如下：
 
 [source, text]
 ----
@@ -361,48 +361,48 @@ In this case, Docker port mapping will be shown as:
 9990/tcp -> 0.0.0.0:9990
 ----
 
-### Stop and Remove Container
+### Stop and Remove Container 停止和移除容器
 
-#### Stop Container
+#### Stop Container 停止容器
 
-. Stop a specific container:
+. Stop a specific container: 停止特定的容器
 +
 [source, text]
 ----
 docker stop <CONTAINER ID>
 ----
 +
-. Stop all the running containers
+. Stop all the running containers 停止所有证照运行的容器
 +
 [source, text]
 ----
 docker stop `docker ps -aq`
 ----
 +
-. Stop only the exited containers
+. Stop only the exited containers 仅停止已经退出的容器
 +
 [source, text]
 ----
 docker ps -a -f "exited=-1"
 ----
 
-#### Remove Container
+#### Remove Container 移除容器
 
-. Remove a specific container:
+. Remove a specific container: 移除指定的容器：
 +
 [source, text]
 ----
 docker rm 0bc123a8ece0
 ----
 +
-. Remove containers meeting a regular expression
+. Remove containers meeting a regular expression 移除匹配正则表达式的容器：
 +
 [source, text]
 ----
 docker ps -a | grep wildfly | awk '{print $1}' | xargs docker rm
 ----
 +
-. Remove all containers, without any criteria
+. Remove all containers, without any criteria 移除所有的容器，不使用任何准则：
 +
 [source, text]
 ----
