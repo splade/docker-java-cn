@@ -1,11 +1,11 @@
-## Docker Basics
+## Docker Basics Docker基础
 
-*PURPOSE*: This chapter introduces the basic terminology of Docker.
+*PURPOSE目的*: This chapter introduces the basic terminology of Docker. 本章介绍Docker的基本术语。
 
 [quote, docs.docker.com/]
-Docker is a platform for developers and sysadmins to develop, ship, and run applications. Docker lets you quickly assemble applications from components and eliminates the friction that can come when shipping code. Docker lets you get your code tested and deployed into production as fast as possible.
+Docker is a platform for developers and sysadmins to develop, ship, and run applications. Docker lets you quickly assemble applications from components and eliminates the friction that can come when shipping code. Docker lets you get your code tested and deployed into production as fast as possible.Docker是一为开发者和系统管理员提供开发、交付、运行应用程序的平台。Docker让你快速的从组件中打包应用和消除交付代码时冲突。Docker让你的代码尽可能快的被测试和部署。
 
-Docker simplifies software delivery by making it easy to build and share images that contain your application’s entire environment, or _application operating system_.
+Docker simplifies software delivery by making it easy to build and share images that contain your application’s entire environment, or _application operating system_.Docker通过很容易的构建和分享镜像简化了软件的交付。Docker镜像中包含你的应用程序的完整的环境或_应用程序操作系统_。
 
 **What does it mean by an application operating system ?**
 
@@ -17,9 +17,9 @@ You can certainly provide an installation script that will download and install 
 
 Docker has three main components:
 
-. __Images__ are *build component* of Docker and a read-only template of application operating system.
-. __Containers__ are *run component* of Docker, and created from, images.Containers can be run, started, stopped, moved, and deleted.
-. Images are stored, shared, and managed in a __registry__, the *distribution component* of Docker. The publically available registry is known as Docker Hub (available at http://hub.docker.com).
+. __Images__ are *build component* of Docker and a read-only template of application operating system.__镜像__是Docker的*构建组件*，是应用操作系统只读的模板。
+. __Containers__ are *run component* of Docker, and created from, images.Containers can be run, started, stopped, moved, and deleted.__容器__ 是Docker的*运行组件*, 由镜像创建。容器可以运行、启动、停止、移动、删除.
+. Images are stored, shared, and managed in a __registry__, the *distribution component* of Docker. The publically available registry is known as Docker Hub (available at http://hub.docker.com). 镜像在一个__注册表__中存储，分享，管理，是Docker的*分发成分*。公共可以获得的注册表被称作Docker Hub（ http://hub.docker.com )。
 
 In order for these three components to work together, there is *Docker Daemon* that runs on a host machine and does the heavy lifting of building, running, and distributing Docker containers. In addition, there is *Client* that is a Docker binary which accepts commands from the user and communicates back and forth with the daemon.
 
