@@ -1,17 +1,18 @@
-## Run Container
+## Run Container 运行容器
 
+在Docker中运行任何应用程序的第一步是从一个镜像中运行一个容器。在官方的Docker registry (即 https://hub.docker.com[Docker Hub])中有大量可用的镜像。为了运行其中的任意一个镜像，你仅需要让Docker客户端运行它。客户端会检查镜像文件是否已经存在了Docker 主机上了。如果已经存在，那么就运行它，如果没有Docker主机就会下载镜像然后运行它。
 The first step in running any application on Docker is to run a container from an image. There are plenty of images available from the official Docker registry (aka https://hub.docker.com[Docker Hub]). To run any of them, you just have to ask the Docker Client to run it. The client will check if the image already exists on Docker Host. If it exists then it'll run it, otherwise the host will download the image and then run it.
 
-### Pull Image
+### Pull Image 拉镜像
 
-Let's first check, if any images are available:
+Let's first check, if any images are available: 让我们先检查一下是否有可用的镜像：
 
 [source, text]
 ----
 docker images
 ----
 
-At first, this list only contains the Docker swarm image, we used earlier.
+At first, this list only contains the Docker swarm image, we used earlier. 首先，列表中仅包含Docker swarm镜像，我们以前用过。
 
 [source, text]
 ----
@@ -19,7 +20,7 @@ REPOSITORY                           TAG                 IMAGE ID            CRE
 swarm     latest              556c60f87888        33 hours ago        10.2 MB
 ----
 
-Now, let's get a vanilla `jboss/wildfly` image:
+Now, let's get a vanilla `jboss/wildfly` image: 现在，让我们获得一个普通的`jboss/wildfly`镜像：
 
 [source, text]
 ----
@@ -30,11 +31,11 @@ docker pull jboss/wildfly:latest
 docker pull classroom.example.com:5000/wildfly:latest 
 ----
 
-By default, docker images are retrieved from https://hub.docker.com/[Docker Hub]. In our case, we're providing a so called private registry via the instructor laptop.
+By default, docker images are retrieved from https://hub.docker.com/[Docker Hub]. In our case, we're providing a so called private registry via the instructor laptop. 默认，从 https://hub.docker.com[Docker Hub]中检索镜像。在我们案例中，我们通过导师的笔记本提供一个所谓的私有registry。
 
-You can see, that Docker is downloading the image with it's different layers.
+You can see, that Docker is downloading the image with it's different layers.可可用看到，Docker正在下载带有不同层的镜像。
 
-[NOTE]
+[NOTE 注意]
 ====
 In a traditional Linux boot, the Kernel first mounts the root File System as read-only, checks its integrity, and then switches the whole rootfs volume to read-write mode.
 When Docker mounts the rootfs, it starts read-only, as in a traditional Linux boot, but then, instead of changing the file system to read-write mode, it takes advantage of a union mount to add a read-write file system over the read-only file system. In fact there may be multiple read-only file systems stacked on top of each other. Consider each one of these file systems as a layer.
@@ -48,17 +49,17 @@ image::images/plain-wildfly0.png[]
 ====
 
 In our particular case, the https://github.com/jboss-dockerfiles/wildfly/blob/9.0.1.Final/Dockerfile[jboss/wildfly] image extends the https://github.com/jboss-dockerfiles/base-jdk/blob/jdk8/Dockerfile[jboss/base-jdk:8] image which adds the OpenJDK distribution on top of the https://github.com/jboss-dockerfiles/base/blob/master/Dockerfile[jboss/base] image.
-The base image is used for all JBoss community images. It provides a base layer that includes:
+The base image is used for all JBoss community images. It provides a base layer that includes:在我们特定的情况下，https://github.com/jboss-dockerfiles/wildfly/blob/9.0.1.Final/Dockerfile[jboss/wildfly]镜像扩展自https://github.com/jboss-dockerfiles/base-jdk/blob/jdk8/Dockerfile[jboss/base-jdk:8] 镜像，这个镜像在https://github.com/jboss-dockerfiles/base/blob/master/Dockerfile[jboss/base]镜像基础上添加了OpenJDK分发版本。基础镜像用在所有的JBoss社区镜像中。它提供的基础层包括：
 
-. A jboss user (uid/gid 1000) with home directory set to `/opt/jboss`
-. A few tools that may be useful when extending the image or installing software, like unzip.
+. A jboss user (uid/gid 1000) with home directory set to`/opt/jboss` 一个jboss用户 (uid/gid 1000)，家目录是`/opt/jboss`
+. A few tools that may be useful when extending the image or installing software, like unzip.一些软件，可能在扩展镜或者安装软件时有用，比如，unzip。
 
-The "`jboss/base-jdk:8`" image adds:
+The "`jboss/base-jdk:8`" image adds:The "`jboss/base-jdk:8`"镜像添加了：
 
-. OpenJDK 8 distribution
-. Adds a `JAVA_HOME` environment variable
+. OpenJDK 8 distribution OpenJDK 8分发
+. Adds a `JAVA_HOME` environment variable添加了一个`JAVA_HOME`环境变量
 
-When the download is done, you can list the images again and will see the following:
+When the download is done, you can list the images again and will see the following: 当下载完成后，你可以再一次列出镜像，将会看到下面：
 
 [source, text]
 ----
@@ -68,13 +69,13 @@ jboss/wildfly       latest              7688aaf382ab        6 weeks ago         
 swarm               latest              207e8b983242        9 weeks ago         10.2 MB
 ----
 
-### Run Container
-For now, all we did is pull the container description (aka image) down to our local laptops. Now we want to actually run an instance of the image as a so called "container".
+### Run Container运行容器
+For now, all we did is pull the container description (aka image) down to our local laptops. Now we want to actually run an instance of the image as a so called "container".目前，我们所做的是拉取容器描述（即镜像）到我们本地笔记本。现在我们想实际的运行镜像的一个实例作为一个所谓的“容器”。
 
-#### Interactive Container
+#### Interactive Container交互式容器
 Typically container run in the background. They are launched and forgotten. And this is the default behaviour for Docker.
 But there is a way we can make them behave like an instance with an interactive console.
-To run the WildFly container in an interactive mode.
+To run the WildFly container in an interactive mode.通常容器在后台运行。他们得启动，然后就忘记它们的存在了。这是Docker的默认行为。但是我们可以采用一种方法使得容器像带有交互式控制台的实例。
 
 [source, text]
 ----
@@ -85,7 +86,7 @@ docker run -it jboss/wildfly
 docker run -it classroom.example.com:5000/wildfly 
 ----
 
-This will show the output as:
+This will show the output as: 会像下面一样显示结果：
 
 [source, text]
 ----
@@ -117,15 +118,15 @@ OpenJDK 64-Bit Server VM warning: ignoring option MaxPermSize=256m; support was 
 17:03:01,138 INFO  [org.jboss.as] (Controller Boot Thread) WFLYSRV0025: WildFly Full 9.0.1.Final (WildFly Core 1.0.1.Final) started in 3431ms - Started 203 of 379 services (210 services are lazy, passive or on-demand)
 ----
 
-This shows that the server started correctly, congratulations!
+This shows that the server started correctly, congratulations!控制台显示了服务器正确启动，恭喜！
 
-The switches do the following: `-i` allows to interact with the STDIN and `-t` attach a TTY to the process. Switches can be combined together and used as `-it`.
+The switches do the following: `-i` allows to interact with the STDIN and `-t` attach a TTY to the process. Switches can be combined together and used as `-it`.开关标记做了下面事情：`-i` 允许和STDIN交互，`-t`把一个TTY附着在进程上。开关标记可以组合在一个，成为 `-it`。
 
-Hit Ctrl+C to stop the container.
+Hit Ctrl+C to stop the container. 按下Ctrl+C停止容器。
 
-#### Detached Container
+#### Detached Container 分离容器
 
-Restart the container in detached mode:
+Restart the container in detached mode: 使用分离模式重启容器
 
 [source, text]
 ----
@@ -138,9 +139,9 @@ docker run --name mywildfly -d classroom.example.com:5000/wildfly
 972f51cc8422eec0a7ea9a804a55a2827b5537c00a6bfd45f8646cb764bc002a
 ----
 
-`-d`, instead of `-it`, runs the container in detached mode.
+`-d`, instead of `-it`, runs the container in detached mode. 使用`-d`而不是`-it`在分离模式下运行容器。 
 
-The output is the unique id assigned to the container. You can use it to refer to the container in various contexts. Check the logs as:
+The output is the unique id assigned to the container. You can use it to refer to the container in various contexts. Check the logs as: 输出是分配给容器的唯一的标识。你可以在各种上下文中使用它来引用容器。检查日志像:
 
 [source, text]
 ----
@@ -154,7 +155,7 @@ The output is the unique id assigned to the container. You can use it to refer t
 . . .
 ----
 
-We can check it by issuing the `docker ps` command which retrieves the images process which are running and the ports engaged by the process:
+We can check it by issuing the `docker ps` command which retrieves the images process which are running and the ports engaged by the process: 我们可以使用`docker ps`命令检查正在运行的镜像进程和进程占用的端口。
 
 [source, text]
 ----
@@ -163,31 +164,31 @@ CONTAINER ID        IMAGE               COMMAND                CREATED          
 7da1c7614edf        jboss/wildfly       "/opt/jboss/wildfly/   About a minute ago   Up About a minute   8080/tcp            mywildfly
 ----
 
-Noticed the "NAMES" column? This is a quick way of refering to your container. Let's try to look at the logs again:
+Noticed the "NAMES" column? This is a quick way of refering to your container. Let's try to look at the logs again: 注意“NAMES” 列，这是引用你的容器的快速方法。让我们试着再看一次日志：
 
 [source, text]
 ----
 docker logs mywildfly
 ----
 
-That looks easier.
+That looks easier. 这看起来更容易些。
 
-Also try `docker ps -a` to see all the containers on this machine.
+Also try `docker ps -a` to see all the containers on this machine.可以试着运行`ps -a`来查看这台电脑上的所有容器。
 
-### Run Container with Default Port
+### Run Container with Default Port 使用默认端口运行容器
 
-Startup log of the server shows that the server is located in the `/opt/jboss/wildfly`. It also shows that the public interfaces are bound to the `0.0.0.0` address while the admin interfaces are bound just to `localhost`. This information will be useful to learn how to customize the server.
+Startup log of the server shows that the server is located in the `/opt/jboss/wildfly`. It also shows that the public interfaces are bound to the `0.0.0.0` address while the admin interfaces are bound just to `localhost`. This information will be useful to learn how to customize the server.服务器的启动日志显示服务器位于`/opt/jboss/wildfly`。它也显示了公共接口绑定到了`0.0.0.0`地址，同时管理接口绑定到`localhost`上。这些信息对学习如果定制服务器有用。
 
-`docker-machine ip <machine-name>` gives us the Docker Host IP address and this was already added to the hosts file. So, we can give it another try by accessing: http://dockerhost:8080. However, this will not work either.
+`docker-machine ip <machine-name>` gives us the Docker Host IP address and this was already added to the hosts file. So, we can give it another try by accessing: http://dockerhost:8080. However, this will not work either. `docker-machine ip <machine-name>`返回Docker主机的IP地址，这地址已经添加到了hosts文件。所以，可以尝试访问 http://dockerhost:8080。但是，这也不会工作。
 
-If you want containers to accept incoming connections, you will need to provide special options when invoking `docker run`. The container, we just started, can't be accessed by our browser. We need to stop it again and restart with different options.
+If you want containers to accept incoming connections, you will need to provide special options when invoking `docker run`. The container, we just started, can't bjine accessed by our browser. We need to stop it again and restart with different options. 如果你想要容器接收传入的连接，你需要在运行`docker run`的时候提供特定的选项。我们刚刚启动的容器，不能通过浏览器访问。我们需要停止它，然后使用不同的选项重启。
 
 [source, text]
 ----
 docker stop mywildfly
 ----
 
-Restart the container as:
+Restart the container as: 重启容器：
 
 [source, text]
 ----
@@ -198,7 +199,7 @@ docker run --name mywildfly-exposed-ports -d -P jboss/wildfly
 docker run --name mywildfly-exposed-ports -d -P classroom.example.com:5000/wildfly 
 ----
 
-`-P` map any exposed ports inside the image to a random port on the Docker host. This can be verified as:
+`-P` map any exposed ports inside the image to a random port on the Docker host. This can be verified as: `-P` 映射镜像内部暴露的任意一个端口到Docker主机上的一个随机端口。这可以通过下面命令来验证：
 
 [source, text]
 ----
@@ -207,20 +208,20 @@ CONTAINER ID        IMAGE               COMMAND                CREATED          
 7f41a5a0cfd6        jboss/wildfly      "/opt/jboss/wildfly/   52 seconds ago      Up 52 seconds       0.0.0.0:32768->8080/tcp   mywildfly-exposed-ports
 ----
 
-The port mapping is shown in the `PORTS` column. Access the WildFly server at http://dockerhost:32768. Make sure to use the correct port number as shown in your case.
+The port mapping is shown in the `PORTS` column. Access the WildFly server at http://dockerhost:32768. Make sure to use the correct port number as shown in your case. 端口映射在`PORTS`显示。使用`http://dockerhost:32768`访问WildFly服务器。请确保使用你控制台上显示的端口号。
 
-NOTE: Exact port number may be different in your case.
+NOTE: Exact port number may be different in your case. 注意：你显示的端口号可能和这里的不同。
 
-### Run Container with Specified Port
+### Run Container with Specified Port 使用指定的端口运行容器
 
-Lets stop the previously running container as:
+Lets stop the previously running container as: 让我们停止运行前面正在运行的容器：
 
 [source, text]
 ----
 docker stop mywildfly-exposed-ports
 ----
 
-Restart the container as:
+Restart the container as: 重新启动容器：
 
 [source, text]
 ----
@@ -231,16 +232,16 @@ docker run --name mywildfly-mapped-ports -d -p 8080:8080 jboss/wildfly
 docker run --name mywildfly-mapped-ports -d -p 8080:8080 classroom.example.com:5000/wildfly 
 ----
 
-The format is `-p hostPort:containerPort`. This option maps container ports to host ports and allows other containers on our host to access them.
+The format is `-p hostPort:containerPort`. This option maps container ports to host ports and allows other containers on our host to access them. 格式是`-p hostPort:containerPort`.这个选项映射容器端口到主机端口，同时允许你主机上的其他容器访问他们。
 
-.Docker Port Mapping
-[NOTE]
+.Docker Port Mapping Docker端口映射
+[NOTE注意]
 ===============================
-Port exposure and mapping are the keys to successful work with Docker.
-See more about networking on the Docker website link:https://docs.docker.com/articles/networking/[Advanced Networking]
+Port exposure and mapping are the keys to successful work with Docker. 端口暴露和映射是成功使用Docker的关键。
+See more about networking on the Docker website link:https://docs.docker.com/articles/networking/[Advanced Networking] 关于更多Docker的网络知识，参考：https://docs.docker.com/articles/networking/[Advanced Networking]
 ===============================
 
-Now we're ready to test http://dockerhost:8080 again. This works with the exposed port, as expected.
+Now we're ready to test http://dockerhost:8080 again. This works with the exposed port, as expected.现在
 
 Lets stop the previously running container as:
 
