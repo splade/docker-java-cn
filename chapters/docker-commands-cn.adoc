@@ -1,0 +1,33 @@
+[[Common_Docker_Commands]]
+## Common Docker Commands 常用Docker命令
+
+Here is the list of commonly used Docker commands: 下面是常用的Docker命令列表：
+
+[width="100%", options="header"]
+|==================
+| Purpose目的| Command命令
+2+^s| Image
+| Build an image构建一个镜像| `docker build --rm=true .`
+| Install an image 安装一个镜像| `docker pull ${IMAGE}`
+| List of installed images 列出已经安装的镜像| `docker images`
+| List of installed images (detailed listing)列出已经安装的镜像（详细列表） | `docker images --no-trunc`
+| Remove an image 移除一个镜像| `docker rmi ${IMAGE_ID}`
+| Remove all untagged images 移除一个没有打标签的镜像| `docker rmi $(docker images \| grep “^” \| awk “{print $3}”)`
+| Remove all images 移除所有的镜像| `docker rm $(docker ps -aq)`
+| Remove dangling images 移除一个已经挂起的镜像| `docker rmi $(docker images --quiet --filter "dangling=true")`
+2+^s| Containers
+| Run a container 运行一个镜像| `docker run`
+| List of running containers 列出所有正在运行的镜像| `docker ps`
+| List of all containers 列出所有的容器| `docker ps -a`
+| Stop a container 停止一个容器| `docker stop ${CID}`
+| Stop all running containers 停止所有正在运行的容器| `docker stop ``docker ps -q```
+| List all exited containers with status 1 列出所有已经退出的状态是1的容器| `docker ps -a --filter "exited=1"`
+| Remove a container 移除一个容器| `docker rm ${CID}`
+| Remove container by a regular expression 使用一个正则表达式来移除一个容器| `docker ps -a \| grep wildfly \| awk '{print $1}' \| xargs docker rm -f`
+| Remove all exited containers 移除所有已经退出的容器| `docker rm -f $(docker ps -a \| grep Exit \| awk '{ print $1 }')`
+| Remove all containers 移除所有的容器| `docker rm $(docker ps -aq)`
+| Find IP address of the container 查找容器的IP地址| `docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${CID}`
+| Attach to a container 附注到一个容器上| `docker attach ${CID}`
+| Open a shell in to a container | `docker exec -it ${CID} bash`
+| Get container id for an image by a regular expression | `docker ps \| grep wildfly \| awk '{print $1}'`
+|==================
