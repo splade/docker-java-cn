@@ -23,37 +23,37 @@ Docker has three main components:
 
 In order for these three components to work together, there is *Docker Daemon* that runs on a host machine and does the heavy lifting of building, running, and distributing Docker containers. In addition, there is *Client* that is a Docker binary which accepts commands from the user and communicates back and forth with the daemon.
 
-.Docker architecture
+.Docker architecture Docker架构
 image::images/docker-architecture.png[]
 
-Client communicates with Daemon, either co-located on the same host, or on a different host. It requests the Daemon to pull an image from the repository using `pull` command. The Daemon then downloads the image from Docker Hub, or whatever registry is configured. Multiple images can be downloaded from the registry and installed on Daemon host. Images are run using `run` command to create containers on demand.
+Client communicates with Daemon, either co-located on the same host, or on a different host. It requests the Daemon to pull an image from the repository using `pull` command. The Daemon then downloads the image from Docker Hub, or whatever registry is configured. Multiple images can be downloaded from the registry and installed on Daemon host. Images are run using `run` command to create containers on demand. 客服端和后台服务进程通信，要么两者在同一个主机上，要么在不同的主机上。它请求守护进程从仓库中拉去一个镜像，使用 `pull` 命令。守护进程然后从Docker Hub上下载镜像，获取任意配置好的注册表中。可以从注册表中下载多个镜像，安装在守护进程主机中。可以根据需要使用 `run` 命令运行镜像来创建一个容器。
 
-**How does a Docker Image work?**
+**How does a Docker Image work? Docker镜像是如何工作的**
 
-We've already seen that Docker images are read-only templates from which Docker containers are launched. Each image consists of a series of layers. Docker makes use of union file systems to combine these layers into a single image. Union file systems allow files and directories of separate file systems, known as branches, to be transparently overlaid, forming a single coherent file system.
+We've already seen that Docker images are read-only templates from which Docker containers are launched. Each image consists of a series of layers. Docker makes use of union file systems to combine these layers into a single image. Union file systems allow files and directories of separate file systems, known as branches, to be transparently overlaid, forming a single coherent file system. 我们已经知道了Docker镜像是只读的模板，Docker容器从镜像启动。联合文件系统不同的文件系统，也叫这分支，的文件和目录可以透明的重叠，形成单一的一致的文件系统。
 
-One of the reasons Docker is so lightweight is because of these layers. When you change a Docker image—for example, update an application to a new version— a new layer gets built. Thus, rather than replacing the whole image or entirely rebuilding, as you may do with a virtual machine, only that layer is added or updated. Now you don't need to distribute a whole new image, just the update, making distributing Docker images faster and simpler.
+One of the reasons Docker is so lightweight is because of these layers. When you change a Docker image—for example, update an application to a new version— a new layer gets built. Thus, rather than replacing the whole image or entirely rebuilding, as you may do with a virtual machine, only that layer is added or updated. Now you don't need to distribute a whole new image, just the update, making distributing Docker images faster and simpler.Docker如此轻量的一个原因是这些层。当你更改了一个Docker镜像，例如，更新了一个应用到新版本，一个新的层会被构建。因此，不是替换整个镜像，或者像使用虚拟机那样重新构建镜像，仅那一层被更新或者添加。现在，你不需要分发整个新的镜像，仅分发更新，这使得分发Docker镜像更快，更简单。
 
-Every image starts from a base image, for example `ubuntu`, a base Ubuntu image, or `fedora`, a base Fedora image. You can also use images of your own as the basis for a new image, for example if you have a base Apache image you could use this as the base of all your web application images.
+Every image starts from a base image, for example `ubuntu`, a base Ubuntu image, or `fedora`, a base Fedora image. You can also use images of your own as the basis for a new image, for example if you have a base Apache image you could use this as the base of all your web application images.每个镜像都是从一个基础镜像开始构建的，比如 `ubuntu`，一个基础的Ubuntu镜像。你可以你自己的镜像作为新镜像的基础镜像，例如，如果你有Apache基础镜像，你可以使用这个镜像作为所有的网站应用的基础镜像。
 
-NOTE: By default, Docker obtains these base images from Docker Hub.
+NOTE: By default, Docker obtains these base images from Docker Hub. 默认，Docker从Docker Hub中获得这个镜像。
 
-Docker images are then built from these base images using a simple, descriptive set of steps we call instructions. Each instruction creates a new layer in our image. Instructions include actions like:
+Docker images are then built from these base images using a simple, descriptive set of steps we call instructions. Each instruction creates a new layer in our image. Instructions include actions like: 然后使用简单的，描述性的步骤，我们称为指令从这些基础镜像中构建Docker镜像。每一个指令在我们的镜像中创建一个新的层。指令包含动作像这个样：
 
-. Run a command
-. Add a file or directory
-. Create an environment variable
-. Run a process when launching a container
+. Run a command 运行一个命令
+. Add a file or directory 添加一个文件或者目录
+. Create an environment variable 创建一个环境变量
+. Run a process when launching a container 当启动时运行一个进程
 
-These instructions are stored in a file called a Dockerfile. Docker reads this Dockerfile when you request a build of an image, executes the instructions, and returns a final image.
+These instructions are stored in a file called a Dockerfile. Docker reads this Dockerfile when you request a build of an image, executes the instructions, and returns a final image.保存这些指令的文件成为Dockerfile文件。Docker读这个Dockerfile当你请求构建一个镜像时，执行里面的指令，返回最终的一个镜像。
 
-**How does a Container work?**
+**How does a Container work?容器是如何工作的**
 
-A container consists of an operating system, user-added files, and meta-data. As we've seen, each container is built from an image. That image tells Docker what the container holds, what process to run when the container is launched, and a variety of other configuration data. The Docker image is read-only. When Docker runs a container from an image, it adds a read-write layer on top of the image (using a union file system as we saw earlier) in which your application can then run.
+A container consists of an operating system, user-added files, and meta-data. As we've seen, each container is built from an image. That image tells Docker what the container holds, what process to run when the container is launched, and a variety of other configuration data. The Docker image is read-only. When Docker runs a container from an image, it adds a read-write layer on top of the image (using a union file system as we saw earlier) in which your application can then run.一个容器由操作系统，用户添加的文件，或者元数据。正如我们所见，每一个容器是从镜像构建的。镜像高斯Docker,容器中包含有什么，当容器启动时运行那个进程，各种其它的配置数据。Docker镜像是只读的，当Docker从一个镜像中运行容器时，它在镜像上面增加了一个读写层（使用联合文件系统，正如我们在前面所见），在那个层中，你的应用程序可以运行。
 
-### Docker Machine
+### Docker Machine Docker Machine
 
-Machine makes it really easy to create Docker hosts on your computer, on cloud providers and inside your own data center. It creates servers, installs Docker on them, then configures the Docker client to talk to them.
+Machine makes it really easy to create Docker hosts on your computer, on cloud providers and inside your own data center. It creates servers, installs Docker on them, then configures the Docker client to talk to them. Machine使得很容易在你的主机上, 在云提供商，在你的数据中心上创建Docker。它创建服务器，在它们上面安装Docker,然后配置Docker客户端和它们通信。
 
 Once your Docker host has been created, it then has a number of commands for managing containers:
 
