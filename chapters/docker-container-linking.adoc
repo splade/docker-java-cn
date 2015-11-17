@@ -3,12 +3,16 @@
 
 <<JavaEE7_PreBuilt_WAR>> explained how to use an in-memory database with the application server. This gets you started rather quickly but becomes a bottleneck soon as the database is only in-memory. This means that any changes made to your schema and data are lost when the application server shuts down. In this case, you need to use a database server that resides outside the application server. For example, MySQL as the database server and WildFly as the application server.
 
+<<JavaEE7_PreBuilt_WAR>> 解释了如何在应用程序服务器中使用内存数据库。这种方式可以让你快速的起步，但是很快会遇到瓶颈，因为数据仅存在内存中。这意味着当应用程序服务器关闭的时候，对数据库模式和数据的任何更改都会丢失。在这种情况下，你需要使用位于应用程序服务器之外的数据库服务器。例如，MySQL作为数据库服务器，WildFly作为应用程序服务器。
+
 .Two Containers On Same Docker Host
 image::images/javaee7-hol-container-linking.png[]
 
 This section will show how https://docs.docker.com/userguide/dockerlinks/[Docker Container Linking] can be used to connect to a service running inside a Docker container via a network port.
 
-. Start MySQL server as:
+这部分将展示如何通过网络端口使用https://docs.docker.com/userguide/dockerlinks/[Docker Container Linking]连接运行在Docker容器内的一项服务。
+
+. Start MySQL server as: 如下启动MySQL服务器：
 +
 [source, text]
 ----
@@ -21,7 +25,7 @@ docker run --name mysqldb -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_D
 +
 `-e` define environment variables that are read by the database at startup and allow us to access the database with this user and password.
 +
-. Start WildFly with the deployed Java EE 7 application as:
+. Start WildFly with the deployed Java EE 7 application as: 如下启动部署了Java EE 7应用的WildFly
 +
 [source, text]
 ----
@@ -33,8 +37,9 @@ docker run -d --name mywildfly-mysql --link mysqldb:db -p 8080:8080 classroom.ex
 ----
 +
 `--link` takes two parameters - first is name of the container we're linking to and second is the alias for the link name.
+`--link` 带有两参数 - 第一个参数好似我们要连接的容器名，第二个参数是连接名的别名。
 +
-.Container Linking
+.Container Linking 容器链接
 [NOTE]
 ===============================
 Creating a link between two containers creates a conduit between a source container and a target container and securely transfer information about source container to target container.
@@ -44,7 +49,7 @@ In our case, target container (WildFly) can see information about source contain
 See more about container communication on the Docker website https://docs.docker.com/userguide/dockerlinks/[Linking Containers Together]
 ===============================
 +
-. See the output as:
+. See the output as: 看到输出如下：
 +
 [source, text]
 ----
@@ -53,8 +58,9 @@ See more about container communication on the Docker website https://docs.docker
 ----
 
 NOTE: If you get a 404 or any other error, wait for a little longer until the containers are started up.
+注意：如果你看到了404错误或者其它错误，再等一会儿直到容器启动起来。
 
-Lets stop the previously running container as:
+Lets stop the previously running container as: 让我们停止前面正在运行的容器：
 
 [source, text]
 ----
